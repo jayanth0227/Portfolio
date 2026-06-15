@@ -36,6 +36,7 @@
 
   <!-- CSS Stylesheet -->
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="particle-background.css">
 
   <!-- Lucide Icons CDN -->
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -81,6 +82,11 @@
   <main>
     <!-- Hero Section -->
     <section id="home" class="hero section-reveal">
+      <!-- Anti Gravity Particle Canvas Background -->
+      <div class="hero-particle-container">
+        <canvas id="hero-particle-canvas"></canvas>
+      </div>
+
       <div class="hero-container">
         <div class="hero-content">
           <span class="hero-badge"><i data-lucide="sparkles"></i> Available for Full-Time Opportunities</span>
@@ -513,6 +519,7 @@
 
   <!-- Script Integration -->
   <script src="script.js"></script>
+  <script src="particle-background.js"></script>
 </body>
 
 </html>

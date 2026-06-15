@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | Jayanth Sai Chikkala Portfolio</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Shared CSS Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- Custom Admin Styles -->
+  <style>
+    .admin-container {
+      max-width: 900px;
+      margin: 100px auto 40px auto;
+      padding: 0 24px;
+    }
+
+    .auth-card {
+      max-width: 450px;
+      margin: 150px auto;
+      padding: 40px;
+      border-radius: var(--border-radius);
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 30px;
+      margin-top: 40px;
+    }
+
+    .admin-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .sidebar-btn {
+      width: 100%;
+      text-align: left;
+      padding: 14px 20px;
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-secondary);
+      border-radius: 12px;
+      font-family: var(--font-heading);
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: all 0.3s ease;
+    }
+
+    .sidebar-btn:hover, .sidebar-btn.active {
+      color: var(--text-primary);
+      background: var(--bg-tertiary);
+      border-color: var(--border-glass);
+    }
+
+    .sidebar-btn.active {
+      border-left: 3px solid var(--primary);
+    }
+
+    .admin-content-pane {
+      padding: 40px;
+      border-radius: var(--border-radius);
+      min-height: 400px;
+    }
+
+    .admin-form-section {
+      display: none;
+    }
+
+    .admin-form-section.active {
+      display: block;
+    }
+
+    .avatar-preview-container {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      margin-bottom: 30px;
+      padding: 20px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px dashed var(--border-glass);
+    }
+
+    .admin-avatar-preview {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--primary);
+    }
+
+    .upload-btn-wrapper {
+      position: relative;
+      overflow: hidden;
+      display: inline-block;
+    }
+
+    .upload-btn-wrapper input[type=file] {
+      font-size: 100px;
+      position: absolute;
+      left: 0;
+      top: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-glass);
+      padding-bottom: 20px;
+      margin-bottom: 30px;
+    }
+
+    .logout-btn {
+      padding: 8px 16px;
+      font-size: 0.85rem;
+      border-radius: 20px;
+      border: 1px solid var(--border-glass);
+      background: transparent;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .logout-btn:hover {
+      color: #ff4d4d;
+      border-color: rgba(255, 77, 77, 0.3);
+      background: rgba(255, 77, 77, 0.05);
+    }
+
+    /* Override input rules slightly to prevent style clashes */
+    .form-group textarea {
+      width: 100%;
+      background: transparent;
+      border: 1px solid var(--border-glass);
+      border-radius: 12px;
+      padding: 16px;
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      outline: none;
+      resize: vertical;
+    }
+
+    .form-group textarea:focus {
+      border-color: var(--primary);
+      box-shadow: var(--shadow-glow);
+    }
+
+    .form-group label {
+      position: absolute;
+      left: 16px;
+      top: 16px;
+      color: var(--text-muted);
+      pointer-events: none;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      font-size: 0.95rem;
+    }
+
+    .form-group input:focus ~ label,
+    .form-group input:not(:placeholder-shown) ~ label,
+    .form-group textarea:focus ~ label,
+    .form-group textarea:not(:placeholder-shown) ~ label {
+      top: -10px;
+      left: 12px;
+      font-size: 0.75rem;
+      color: var(--primary);
+      background: var(--bg-secondary);
+      padding: 0 6px;
+    }
+
+    @media (max-width: 768px) {
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+  <!-- Background Decorative Orbs -->
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+
+  <!-- Login Section -->
+  <div id="login-section">
+    <div class="auth-card glass">
+      <h2 class="text-gradient" style="margin-bottom: 10px; text-align: center;">Admin Access</h2>
+      <p style="color: var(--text-secondary); text-align: center; margin-bottom: 30px;">Login to update your portfolio details</p>
+      
+      <form id="login-form">
+        <div class="form-group" style="margin-bottom: 24px; position: relative;">
+          <input type="text" id="username" placeholder=" " required style="width: 100%; padding: 16px; border-radius: 12px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-primary); outline: none;">
+          <label for="username">Username</label>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 30px; position: relative;">
+          <input type="password" id="password" placeholder=" " required style="width: 100%; padding: 16px; border-radius: 12px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-primary); outline: none;">
+          <label for="password">Password</label>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">
+          <span>Login</span> <i data-lucide="log-in"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Dashboard Section (Hidden by Default) -->
+  <div id="dashboard-section" style="display: none;">
+    <div class="admin-container">
+      <div class="admin-header glass" style="padding: 24px; border-radius: var(--border-radius); background: var(--bg-glass);">
+        <div>
+          <h1 class="text-gradient">Portfolio Console</h1>
+          <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 4px;">Manage your public-facing developer profile</p>
+        </div>
+        <button id="logout-btn" class="logout-btn">
+          Sign Out <i data-lucide="log-out" style="width: 14px; height: 14px; display: inline; vertical-align: middle; margin-left: 4px;"></i>
+        </button>
+      </div>
+
+      <div class="dashboard-grid">
+        <!-- Sidebar Navigation -->
+        <aside class="admin-sidebar">
+          <button class="sidebar-btn active" data-target="profile-details-section">
+            <i data-lucide="user"></i> Profile Details
+          </button>
+          <button class="sidebar-btn" data-target="avatar-section">
+            <i data-lucide="image"></i> Profile Photo
+          </button>
+          <button class="sidebar-btn" data-target="socials-section">
+            <i data-lucide="link"></i> Socials & Contact
+          </button>
+          <button class="sidebar-btn" data-target="api-settings-section">
+            <i data-lucide="settings"></i> System Config
+          </button>
+        </aside>
+
+        <!-- Form Pane -->
+        <main class="admin-content-pane glass">
+          <!-- SECTION 1: PROFILE DETAILS -->
+          <section id="profile-details-section" class="admin-form-section active">
+            <h3 style="margin-bottom: 24px;">Core Profile Information</h3>
+            <form id="profile-form">
+              <div class="form-group" style="margin-bottom: 24px; position: relative;">
+                <input type="text" id="profile-name" placeholder=" " required style="width: 100%; padding: 16px; border-radius: 12px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-primary); outline: none;">
+                <label for="profile-name">Full Name</label>
+              </div>
+
+              <div class="form-group" style="margin-bottom: 24px; position: relative;">
+                <input type="text" id="profile-title" placeholder=" " required style="width: 100%; padding: 16px; border-radius: 12px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-primary); outline: none;">
+                <label for="profile-title">Hero Title</label>
+              </div>
+
+              <div class="form-group" style="margin-bottom: 24px; position: relative;">
+                <textarea id="profile-subtitle" rows="3" placeholder=" " required></textarea>
+                <label for="profile-subtitle">Hero Subtitle</label>
+              </div>
+
+              <div class="form-group" style="margin-bottom: 30px; position: relative;">
+                <textarea id="profile-bio" rows="6" placeholder=" " required></textarea>
+                <label for="profile-bio">About Me Narrative</label>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group" style="margin-bottom: 24px; position: relative;">
+                  <input type="text" id="profile-exp" placeholder=" " required style="width: 100%; padding: 16px; border-radius: 12px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-primary); outline: none;">
+                  <label for="profile-exp">Years Experience (e.g. 1+)</label>
+                </div>
+                <div class="form-group" style="margin-bottom: 24px; position: relative;">
+                  <input type="text" id="profile-projects" placeholder=" " required style="width: 100%; padding: 16px; border-radius: 12px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-primary); outline: none;">
+                  <label for="profile-projects">Core Projects (e.g. 3+)</label>
+                </div>
+              </div>
+
+              <div class="form-group" style="margin-bottom: 30px; position: relative;">
+                <input type="text" id="profile-academic" placeholder=" " required style="width: 100%; padding: 16px; border-radius: 12px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-primary); outline: none;">
+                <label for="profile-academic">Academic Standing (e.g. Top 10%)</label>
+              </div>
+
+              <button type="submit" class="btn btn-primary">
+                Save Changes <i data-lucide="check"></i>
+              </button>
+            </form>
+          </section>
+
+          <!-- SECTION 2: PROFILE PHOTO -->
+          <section id="avatar-section" class="admin-form-section">
+            <h3 style="margin-bottom: 24px;">Manage Avatar Photo</h3>
+            <div class="avatar-preview-container">
+              <img id="avatar-preview" src="developer_avatar.png" alt="Avatar Preview" class="admin-avatar-preview">
+              <div>
+                <h4 style="margin-bottom: 8px;">Upload New Photo</h4>
+                <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 16px;">This will upload the file directly to Cloudinary and return an optimized image link.</p>
+                <div class="upload-btn-wrapper">
+                  <button class="btn btn-secondary">Choose Image</button>
+                  <input type="file" id="avatar-upload" accept="image/*" />
+                </div>
+              </div>
+            </div>
+            
+            <div class="form-group" style="margin-bottom: 30px; position: relative;">
+              <input type="text" id="avatar-url-display" readonly placeholder=" " style="width: 100%; padding: 16px; border-radius: 12px; border: 1px solid var(--border-glass); background: rgba(0,0,0,0.2); color: var(--text-muted); outline: none;">
+              <label for="avatar-url-display">Cloudinary Photo URL (Generated)</label>
+            </div>
+            
+            <button type="button" id="save-photo-btn" class="btn btn-primary">
+              Save Photo Configuration <i data-lucide="check"></i>
+            </button>
+          </section>
+
+          <!-- SECTION 3: SOCIALS & CONTACT -->
+          <section id="socials-section" class="admin-form-section">
+            <h3 style="margin-bottom: 24px;">Social Connections & Contact Details</h3>
+            <form id="socials-form">
+              <div class="form-group" style="margin-bottom: 24px; position: relative;">
+                <input type="url" id="social-github" placeholder=" " required style="width: 100%; padding: 16px; border-radius: 12px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-primary); outline: none;">
+                <label for="social-github">GitHub Profile URL</label>
+              </div>
+
+              <div class="form-group" style="margin-bottom: 24px; position: relative;">
+                <input type="url" id="social-linkedin" placeholder=" " required style="width: 100%; padding: 16px; border-radius: 12px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-primary); outline: none;">
+                <label for="social-linkedin">LinkedIn Profile URL</label>
+              </div>
+
+              <div class="form-group" style="margin-bottom: 24px; position: relative;">
+                <input type="email" id="social-email" placeholder=" " required style="width: 100%; padding: 16px; border-radius: 12px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-primary); outline: none;">
+                <label for="social-email">Public Email Address</label>
+              </div>
+
+              <div class="form-group" style="margin-bottom: 24px; position: relative;">
+                <input type="text" id="social-phone" placeholder=" " required style="width: 100%; padding: 16px; border-radius: 12px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-primary); outline: none;">
+                <label for="social-phone">Call / WhatsApp Number</label>
+              </div>
+
+              <div class="form-group" style="margin-bottom: 30px; position: relative;">
+                <input type="text" id="social-location" placeholder=" " required style="width: 100%; padding: 16px; border-radius: 12px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-primary); outline: none;">
+                <label for="social-location">Location (City, Country)</label>
+              </div>
+
+              <button type="submit" class="btn btn-primary">
+                Save Social Configurations <i data-lucide="check"></i>
+              </button>
+            </form>
+          </section>
+
+          <!-- SECTION 4: SYSTEM CONFIG -->
+          <section id="api-settings-section" class="admin-form-section">
+            <h3 style="margin-bottom: 12px;">System Settings</h3>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 24px;">Configure the target API server endpoint. If running locally, keep it at http://localhost:8080. If deployed to production, update it to your Render server URL.</p>
+            
+            <div class="form-group" style="margin-bottom: 30px; position: relative;">
+              <input type="url" id="api-base-url" placeholder=" " required style="width: 100%; padding: 16px; border-radius: 12px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-primary); outline: none;">
+              <label for="api-base-url">API Endpoint Base URL</label>
+            </div>
+
+            <button type="button" id="save-api-btn" class="btn btn-primary">
+              Update Endpoint <i data-lucide="save"></i>
+            </button>
+          </section>
+        </main>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification Toast -->
+  <div id="toast" style="position: fixed; bottom: 24px; right: 24px; z-index: 9999; padding: 16px 24px; border-radius: 8px; font-weight: 600; display: none;" class="glass">
+    <span id="toast-message"></span>
+  </div>
+
+  <script src="admin.js"></script>
+</body>
+
+</html>

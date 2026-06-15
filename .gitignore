@@ -1,0 +1,26 @@
+# Maven build output
+backend/target/
+**/target/
+target/
+.mvn/wrapper/maven-wrapper.jar
+
+# IDE & Editor Settings
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+.classpath
+.project
+.settings/
+.factorypath
+bin/
+dependency-reduced-pom.xml
+
+# System files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Sensitive configuration containing Aiven DB and Cloudinary keys
+backend/src/main/resources/application.properties

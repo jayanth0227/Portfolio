@@ -6,6 +6,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Dashboard | Jayanth Sai Chikkala Portfolio</title>
   
+  <script>
+    // Theme initialization to prevent layout flash on load
+    const savedTheme = localStorage.getItem('theme');
+    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const initialTheme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', initialTheme);
+  </script>
+  
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,17 +24,27 @@
   
   <!-- Custom Admin Styles -->
   <style>
+    #login-section {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      box-sizing: border-box;
+    }
+
     .admin-container {
-      max-width: 900px;
-      margin: 100px auto 40px auto;
+      max-width: var(--max-width);
+      margin: 120px auto 40px auto;
       padding: 0 24px;
     }
 
     .auth-card {
-      max-width: 450px;
-      margin: 150px auto;
+      width: 100%;
+      max-width: 420px;
       padding: 40px;
       border-radius: var(--border-radius);
+      margin: 0;
     }
 
     .dashboard-grid {
@@ -46,8 +64,8 @@
       width: 100%;
       text-align: left;
       padding: 14px 20px;
-      background: transparent;
-      border: 1px solid transparent;
+      background: var(--bg-glass);
+      border: 1px solid var(--border-glass);
       color: var(--text-secondary);
       border-radius: 12px;
       font-family: var(--font-heading);
@@ -56,17 +74,21 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      transition: all 0.3s ease;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    .sidebar-btn:hover, .sidebar-btn.active {
+    .sidebar-btn:hover {
       color: var(--text-primary);
       background: var(--bg-tertiary);
-      border-color: var(--border-glass);
+      border-color: var(--primary);
+      transform: translateX(4px);
     }
 
     .sidebar-btn.active {
-      border-left: 3px solid var(--primary);
+      color: #ffffff;
+      background: var(--gradient-primary);
+      border-color: var(--primary);
+      box-shadow: var(--shadow-glow);
     }
 
     .admin-content-pane {
@@ -194,9 +216,187 @@
     @media (max-width: 768px) {
       .dashboard-grid {
         grid-template-columns: 1fr;
+        gap: 20px;
+        margin-top: 20px;
       }
       .form-row {
         grid-template-columns: 1fr;
+      }
+      
+      /* Swipeable horizontal sub-tabs selector on mobile */
+      .admin-sidebar {
+        flex-direction: row;
+        overflow-x: auto;
+        padding-bottom: 10px;
+        gap: 10px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none; /* Hide scrollbar for Firefox */
+        border-bottom: 1px solid var(--border-glass);
+        margin-bottom: 10px;
+      }
+      
+      .admin-sidebar::-webkit-scrollbar {
+        display: none; /* Hide scrollbar for Chrome/Safari */
+      }
+      
+      .sidebar-btn {
+        width: auto;
+        white-space: nowrap;
+        padding: 10px 16px;
+        font-size: 0.85rem;
+      }
+      
+      .sidebar-btn:hover {
+        transform: none; /* Disable shift transform on horizontal scrolling lists */
+      }
+
+      .admin-content-pane {
+        padding: 24px;
+      }
+      
+      /* Hide Sign Out button in the main narrow header on mobile */
+      #logout-btn {
+        display: none !important;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .logo {
+        font-size: 1.15rem !important; /* Scale brand logo font-size to prevent wrap */
+      }
+      .navbar {
+        padding: 0 12px;
+      }
+      .admin-container {
+        margin-top: 100px;
+        padding: 0 16px;
+      }
+    }
+
+    .experience-card-admin {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 20px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-glass);
+    }
+    .experience-card-admin .card-info-admin h5 {
+      font-size: 1rem;
+      margin-bottom: 4px;
+    }
+    .experience-card-admin .card-info-admin span {
+      font-size: 0.8rem;
+      color: var(--primary);
+    }
+    .experience-card-admin .card-actions-admin {
+      display: flex;
+      gap: 12px;
+    }
+    .admin-btn-icon {
+      background: transparent;
+      border: 1px solid var(--border-glass);
+      color: var(--text-secondary);
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+    .admin-btn-icon:hover {
+      color: var(--text-primary);
+      background: var(--bg-tertiary);
+      border-color: var(--primary);
+    }
+    .admin-btn-icon.delete:hover {
+      color: #ff4d4d;
+      border-color: rgba(255, 77, 77, 0.3);
+      background: rgba(255, 77, 77, 0.05);
+    }
+    
+    .project-card-admin {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 20px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-glass);
+    }
+    .project-card-admin .card-info-admin {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .project-card-admin .card-info-text-admin h5 {
+      font-size: 1rem;
+      margin: 0 0 4px 0;
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+    .project-card-admin .card-info-text-admin span {
+      font-size: 0.8rem;
+      color: var(--primary);
+      font-weight: 500;
+    }
+    .project-card-admin .card-actions-admin {
+      display: flex;
+      gap: 12px;
+    }
+    .project-card-admin .project-thumbnail-admin {
+      width: 60px;
+      height: 40px;
+      border-radius: 6px;
+      object-fit: cover;
+      border: 1px solid var(--border-glass);
+    }
+    
+    .skill-card-admin {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 20px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-glass);
+    }
+    .skill-card-admin .card-info-admin {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .skill-card-admin .card-info-text-admin h5 {
+      font-size: 1rem;
+      margin: 0 0 4px 0;
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+    .skill-card-admin .card-info-text-admin span {
+      font-size: 0.8rem;
+      color: var(--primary);
+      font-weight: 500;
+    }
+    .skill-card-admin .card-actions-admin {
+      display: flex;
+      gap: 12px;
+    }
+
+    /* Handle mobile vs desktop Sign Out buttons */
+    #logout-link {
+      display: none !important;
+    }
+
+    @media (max-width: 768px) {
+      #logout-link {
+        display: inline-flex !important;
+        color: #ff4d4d;
+        border-top: 1px solid var(--border-glass);
+        margin-top: 10px;
+        padding-top: 10px;
       }
     }
   </style>
@@ -206,24 +406,61 @@
 </head>
 
 <body>
+  <!-- Custom Cursor -->
+  <div class="custom-cursor" id="custom-cursor"></div>
+  <div class="custom-cursor-glow" id="custom-cursor-glow"></div>
+
   <!-- Background Decorative Orbs -->
   <div class="orb orb-1"></div>
   <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <!-- Header Brand Navigation Bar -->
+  <header class="navbar scrolled" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="logo">
+        <span class="logo-accent">&lt;</span>Jayanth Sai<span class="logo-accent">.Chikkala /&gt;</span>
+      </a>
+
+      <nav class="nav-menu" id="nav-menu" style="display: none;">
+        <a href="index.html" class="nav-link">Go to Portfolio</a>
+        <a href="admin.html" class="nav-link active">Console</a>
+        <a href="#" id="logout-link" class="nav-link">Sign Out <i data-lucide="log-out" style="width: 14px; height: 14px; display: inline-block; vertical-align: middle; margin-left: 4px;"></i></a>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle visual theme">
+          <i data-lucide="sun" class="sun-icon"></i>
+          <i data-lucide="moon" class="moon-icon"></i>
+        </button>
+        <button id="logout-btn" class="logout-btn" style="display: none; align-items: center; justify-content: center; gap: 6px; margin-left: 8px;">
+          <span>Sign Out</span> <i data-lucide="log-out" style="width: 15px; height: 15px;"></i>
+        </button>
+        <button class="mobile-toggle" id="mobile-toggle" aria-label="Toggle navigation menu" style="display: none;">
+          <i data-lucide="menu" class="menu-icon"></i>
+          <i data-lucide="x" class="close-icon"></i>
+        </button>
+      </div>
+    </div>
+  </header>
 
   <!-- Login Section -->
   <div id="login-section">
-    <div class="auth-card glass">
-      <h2 class="text-gradient" style="margin-bottom: 10px; text-align: center;">Admin Access</h2>
-      <p style="color: var(--text-secondary); text-align: center; margin-bottom: 30px;">Login to update your portfolio details</p>
+    <div class="auth-card glass" style="border: 1px solid var(--border-glass); background: var(--bg-glass); box-shadow: var(--shadow-lg); text-align: center;">
+      <div class="auth-icon" style="width: 60px; height: 60px; border-radius: 50%; background: var(--bg-secondary); border: 1px solid var(--border-glass); display: flex; align-items: center; justify-content: center; color: var(--primary); margin: 0 auto 20px auto; box-shadow: var(--shadow-glow);">
+        <i data-lucide="shield-check" style="width: 28px; height: 28px;"></i>
+      </div>
+      <h2 class="text-gradient" style="margin-bottom: 8px; font-weight: 800; font-size: 2rem;">Admin Access</h2>
+      <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 30px;">Secure gateway authentication required</p>
       
       <form id="login-form">
         <div class="form-group" style="margin-bottom: 24px; position: relative;">
-          <input type="text" id="username" placeholder=" " required style="width: 100%; padding: 16px; border-radius: 12px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-primary); outline: none;">
+          <input type="text" id="username" placeholder=" " required style="width: 100%; padding: 16px; border-radius: 12px; border: 1px solid var(--border-glass); background: var(--bg-secondary); color: var(--text-primary); outline: none;">
           <label for="username">Username</label>
         </div>
 
         <div class="form-group" style="margin-bottom: 30px; position: relative;">
-          <input type="password" id="password" placeholder=" " required style="width: 100%; padding: 16px; border-radius: 12px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-primary); outline: none;">
+          <input type="password" id="password" placeholder=" " required style="width: 100%; padding: 16px; border-radius: 12px; border: 1px solid var(--border-glass); background: var(--bg-secondary); color: var(--text-primary); outline: none;">
           <label for="password">Password</label>
         </div>
 
@@ -237,14 +474,12 @@
   <!-- Dashboard Section (Hidden by Default) -->
   <div id="dashboard-section" style="display: none;">
     <div class="admin-container">
-      <div class="admin-header glass" style="padding: 24px; border-radius: var(--border-radius); background: var(--bg-glass);">
-        <div>
-          <h1 class="text-gradient">Portfolio Console</h1>
-          <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 4px;">Manage your public-facing developer profile</p>
-        </div>
-        <button id="logout-btn" class="logout-btn">
-          Sign Out <i data-lucide="log-out" style="width: 14px; height: 14px; display: inline; vertical-align: middle; margin-left: 4px;"></i>
-        </button>
+      <!-- Minimalist console header -->
+      <div style="margin-bottom: 30px; display: flex; flex-direction: column; gap: 4px;">
+        <span style="font-family: var(--font-heading); font-size: 0.8rem; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 2px;">Portfolio Management Console</span>
+        <h2 class="text-gradient" style="font-size: 2.2rem; font-weight: 800;">Welcome back, Jayanth</h2>
+        <p style="color: var(--text-secondary); font-size: 0.95rem;">Select an inventory category from the sidebar menu to update your live portfolio content.</p>
+        <div style="width: 80px; height: 4px; background: var(--gradient-primary); border-radius: 2px; margin-top: 8px;"></div>
       </div>
 
       <div class="dashboard-grid">
@@ -259,6 +494,15 @@
           <button class="sidebar-btn" data-target="socials-section">
             <i data-lucide="link"></i> Socials & Contact
           </button>
+          <button class="sidebar-btn" data-target="experience-section">
+            <i data-lucide="briefcase"></i> Experience Timeline
+          </button>
+          <button class="sidebar-btn" data-target="projects-admin-section">
+            <i data-lucide="folder-git-2"></i> Projects Portfolio
+          </button>
+          <button class="sidebar-btn" data-target="skills-admin-section">
+            <i data-lucide="award"></i> Skillset Inventory
+          </button>
           <button class="sidebar-btn" data-target="api-settings-section">
             <i data-lucide="settings"></i> System Config
           </button>
@@ -268,7 +512,11 @@
         <main class="admin-content-pane glass">
           <!-- SECTION 1: PROFILE DETAILS -->
           <section id="profile-details-section" class="admin-form-section active">
-            <h3 style="margin-bottom: 24px;">Core Profile Information</h3>
+            <div style="margin-bottom: 30px;">
+              <span style="font-family: var(--font-heading); font-size: 0.8rem; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 2px;">Profile Management</span>
+              <h3 style="font-size: 1.8rem; font-weight: 800; margin-top: 4px;">Core Profile Information</h3>
+              <div style="width: 40px; height: 3px; background: var(--gradient-primary); border-radius: 2px; margin-top: 10px;"></div>
+            </div>
             <form id="profile-form">
               <div class="form-group" style="margin-bottom: 24px; position: relative;">
                 <input type="text" id="profile-name" placeholder=" " required style="width: 100%; padding: 16px; border-radius: 12px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-primary); outline: none;">
@@ -314,7 +562,11 @@
 
           <!-- SECTION 2: PROFILE PHOTO -->
           <section id="avatar-section" class="admin-form-section">
-            <h3 style="margin-bottom: 24px;">Manage Avatar Photo</h3>
+            <div style="margin-bottom: 30px;">
+              <span style="font-family: var(--font-heading); font-size: 0.8rem; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 2px;">Avatar Configuration</span>
+              <h3 style="font-size: 1.8rem; font-weight: 800; margin-top: 4px;">Manage Profile Photo</h3>
+              <div style="width: 40px; height: 3px; background: var(--gradient-primary); border-radius: 2px; margin-top: 10px;"></div>
+            </div>
             <div class="avatar-preview-container">
               <img id="avatar-preview" src="developer_avatar.png" alt="Avatar Preview" class="admin-avatar-preview">
               <div>
@@ -339,7 +591,11 @@
 
           <!-- SECTION 3: SOCIALS & CONTACT -->
           <section id="socials-section" class="admin-form-section">
-            <h3 style="margin-bottom: 24px;">Social Connections & Contact Details</h3>
+            <div style="margin-bottom: 30px;">
+              <span style="font-family: var(--font-heading); font-size: 0.8rem; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 2px;">Connect Channels</span>
+              <h3 style="font-size: 1.8rem; font-weight: 800; margin-top: 4px;">Socials & Contact Links</h3>
+              <div style="width: 40px; height: 3px; background: var(--gradient-primary); border-radius: 2px; margin-top: 10px;"></div>
+            </div>
             <form id="socials-form">
               <div class="form-group" style="margin-bottom: 24px; position: relative;">
                 <input type="url" id="social-github" placeholder=" " required style="width: 100%; padding: 16px; border-radius: 12px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-primary); outline: none;">
@@ -374,7 +630,11 @@
 
           <!-- SECTION 4: SYSTEM CONFIG -->
           <section id="api-settings-section" class="admin-form-section">
-            <h3 style="margin-bottom: 12px;">System Settings</h3>
+            <div style="margin-bottom: 30px;">
+              <span style="font-family: var(--font-heading); font-size: 0.8rem; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 2px;">Backend Link</span>
+              <h3 style="font-size: 1.8rem; font-weight: 800; margin-top: 4px;">System Settings & API Configuration</h3>
+              <div style="width: 40px; height: 3px; background: var(--gradient-primary); border-radius: 2px; margin-top: 10px;"></div>
+            </div>
             <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 24px;">Configure the target API server endpoint. If running locally, keep it at http://localhost:8080. If deployed to production, update it to your Render server URL.</p>
             
             <div class="form-group" style="margin-bottom: 30px; position: relative;">
@@ -385,6 +645,209 @@
             <button type="button" id="save-api-btn" class="btn btn-primary">
               Update Endpoint <i data-lucide="save"></i>
             </button>
+          </section>
+
+          <!-- SECTION 5: EXPERIENCE TIMELINE -->
+          <section id="experience-section" class="admin-form-section">
+            <div style="margin-bottom: 30px;">
+              <span style="font-family: var(--font-heading); font-size: 0.8rem; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 2px;">Timeline Chronology</span>
+              <h3 style="font-size: 1.8rem; font-weight: 800; margin-top: 4px;">Manage Experience Timeline</h3>
+              <div style="width: 40px; height: 3px; background: var(--gradient-primary); border-radius: 2px; margin-top: 10px;"></div>
+            </div>
+            
+            <!-- Dynamic Experience List -->
+            <div id="experience-list-container" style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 30px;">
+              <!-- Dynamic list loaded from JS -->
+            </div>
+            
+            <!-- Add/Edit form -->
+            <div class="glass" style="padding: 24px; border-radius: var(--border-radius); border: 1px solid var(--border-glass); background: rgba(0,0,0,0.15);">
+              <h4 id="experience-form-title" style="margin-bottom: 20px;">Add New Experience</h4>
+              <form id="experience-form">
+                <input type="hidden" id="exp-id">
+                
+                <div class="form-group" style="margin-bottom: 24px; position: relative;">
+                  <input type="text" id="exp-role" placeholder=" " required style="width: 100%; padding: 16px; border-radius: 12px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-primary); outline: none;">
+                  <label for="exp-role">Role Title (e.g. Associate Software Engineer)</label>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 24px; position: relative;">
+                  <input type="text" id="exp-duration" placeholder=" " required style="width: 100%; padding: 16px; border-radius: 12px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-primary); outline: none;">
+                  <label for="exp-duration">Duration (e.g. Jul 2025 - Present)</label>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 24px; position: relative;">
+                  <textarea id="exp-description" rows="4" placeholder=" " required style="width: 100%; padding: 16px; border-radius: 12px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-primary); outline: none;"></textarea>
+                  <label for="exp-description">Role Description / Achievements</label>
+                </div>
+
+                <div style="display: flex; gap: 12px;">
+                  <button type="submit" id="exp-submit-btn" class="btn btn-primary">
+                    <span>Add Experience</span> <i data-lucide="plus"></i>
+                  </button>
+                  <button type="button" id="exp-cancel-btn" class="btn btn-secondary" style="display: none;">
+                    Cancel <i data-lucide="x"></i>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </section>
+
+          <!-- SECTION 6: PROJECTS PORTFOLIO -->
+          <section id="projects-admin-section" class="admin-form-section">
+            <div style="margin-bottom: 30px;">
+              <span style="font-family: var(--font-heading); font-size: 0.8rem; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 2px;">Milestone Showcase</span>
+              <h3 style="font-size: 1.8rem; font-weight: 800; margin-top: 4px;">Manage Projects Portfolio</h3>
+              <div style="width: 40px; height: 3px; background: var(--gradient-primary); border-radius: 2px; margin-top: 10px;"></div>
+            </div>
+            
+            <!-- Dynamic Projects List -->
+            <div id="projects-list-container" style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 30px;">
+              <!-- Dynamic list loaded from JS -->
+            </div>
+            
+            <!-- Add/Edit form -->
+            <div class="glass" style="padding: 24px; border-radius: var(--border-radius); border: 1px solid var(--border-glass); background: rgba(0,0,0,0.15);">
+              <h4 id="project-form-title" style="margin-bottom: 20px;">Add New Project</h4>
+              <form id="project-form">
+                <input type="hidden" id="proj-id">
+                
+                <div class="form-row">
+                  <div class="form-group" style="margin-bottom: 24px; position: relative;">
+                    <input type="text" id="proj-title" placeholder=" " required style="width: 100%; padding: 16px; border-radius: 12px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-primary); outline: none;">
+                    <label for="proj-title">Project Title (e.g. Smart Office Management)</label>
+                  </div>
+                  <div class="form-group" style="margin-bottom: 24px; position: relative;">
+                    <input type="text" id="proj-tag" placeholder=" " required style="width: 100%; padding: 16px; border-radius: 12px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-primary); outline: none;">
+                    <label for="proj-tag">Sub-tag (e.g. Enterprise / Workflow)</label>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group" style="margin-bottom: 24px; position: relative;">
+                    <input type="text" id="proj-date" placeholder=" " required style="width: 100%; padding: 16px; border-radius: 12px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-primary); outline: none;">
+                    <label for="proj-date">Date / Year (e.g. 2025)</label>
+                  </div>
+                  <div class="form-group" style="margin-bottom: 24px; position: relative;">
+                    <input type="url" id="proj-project-url" placeholder=" " required style="width: 100%; padding: 16px; border-radius: 12px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-primary); outline: none;">
+                    <label for="proj-project-url">Project Code / Live URL</label>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group" style="margin-bottom: 24px; position: relative;">
+                    <!-- Dropdown category selector -->
+                    <select id="proj-category" required style="width: 100%; padding: 16px; border-radius: 12px; border: 1px solid var(--border-glass); background: var(--bg-secondary); color: var(--text-primary); outline: none; font-family: var(--font-body); font-size: 0.95rem;">
+                      <option value="" disabled selected hidden>Select Project Category</option>
+                      <option value="fullstack">Full Stack</option>
+                      <option value="backend">Backend & Security</option>
+                    </select>
+                  </div>
+                  <div class="form-group" style="margin-bottom: 24px; position: relative;">
+                    <input type="text" id="proj-tech-stack" placeholder=" " required style="width: 100%; padding: 16px; border-radius: 12px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-primary); outline: none;">
+                    <label for="proj-tech-stack">Technologies Used (comma separated)</label>
+                  </div>
+                </div>
+
+                <!-- Image Upload and Preview -->
+                <div class="avatar-preview-container" style="margin-bottom: 24px;">
+                  <img id="proj-image-preview" src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80" alt="Project Preview" class="project-thumbnail-admin" style="width: 120px; height: 80px; border-radius: 8px;">
+                  <div>
+                    <h4 style="margin-bottom: 8px; font-size: 0.95rem;">Project Screenshot</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.8rem; margin-bottom: 12px;">Choose a screenshot to upload to Cloudinary.</p>
+                    <div class="upload-btn-wrapper">
+                      <button type="button" class="btn btn-secondary" style="padding: 8px 16px; font-size: 0.85rem;">Choose Screenshot</button>
+                      <input type="file" id="proj-image-upload" accept="image/*" />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 24px; position: relative;">
+                  <input type="text" id="proj-image-url" readonly placeholder=" " style="width: 100%; padding: 16px; border-radius: 12px; border: 1px solid var(--border-glass); background: rgba(0,0,0,0.2); color: var(--text-muted); outline: none;">
+                  <label for="proj-image-url">Cloudinary Photo URL (Generated)</label>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 24px; position: relative;">
+                  <textarea id="proj-description" rows="4" placeholder=" " required style="width: 100%; padding: 16px; border-radius: 12px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-primary); outline: none;"></textarea>
+                  <label for="proj-description">Detailed Project Description</label>
+                </div>
+
+                <div style="display: flex; gap: 12px;">
+                  <button type="submit" id="proj-submit-btn" class="btn btn-primary">
+                    <span>Add Project</span> <i data-lucide="plus"></i>
+                  </button>
+                  <button type="button" id="proj-cancel-btn" class="btn btn-secondary" style="display: none;">
+                    Cancel <i data-lucide="x"></i>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </section>
+
+          <!-- SECTION 7: SKILLSET INVENTORY -->
+          <section id="skills-admin-section" class="admin-form-section">
+            <div style="margin-bottom: 30px;">
+              <span style="font-family: var(--font-heading); font-size: 0.8rem; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 2px;">Skill Stack</span>
+              <h3 style="font-size: 1.8rem; font-weight: 800; margin-top: 4px;">Manage Skillset Inventory</h3>
+              <div style="width: 40px; height: 3px; background: var(--gradient-primary); border-radius: 2px; margin-top: 10px;"></div>
+            </div>
+            
+            <!-- Dynamic Skills List -->
+            <div id="skills-list-container" style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 30px;">
+              <!-- Dynamic list loaded from JS -->
+            </div>
+            
+            <!-- Add/Edit form -->
+            <div class="glass" style="padding: 24px; border-radius: var(--border-radius); border: 1px solid var(--border-glass); background: rgba(0,0,0,0.15);">
+              <h4 id="skill-form-title" style="margin-bottom: 20px;">Add New Skill</h4>
+              <form id="skill-form">
+                <input type="hidden" id="skill-id">
+                
+                <div class="form-row">
+                  <div class="form-group" style="margin-bottom: 24px; position: relative;">
+                    <input type="text" id="skill-name" placeholder=" " required style="width: 100%; padding: 16px; border-radius: 12px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-primary); outline: none;">
+                    <label for="skill-name">Skill Name (e.g. Java, Docker)</label>
+                  </div>
+                  <div class="form-group" style="margin-bottom: 24px; position: relative;">
+                    <select id="skill-category" required style="width: 100%; padding: 16px; border-radius: 12px; border: 1px solid var(--border-glass); background: var(--bg-secondary); color: var(--text-primary); outline: none; font-family: var(--font-body); font-size: 0.95rem;">
+                      <option value="" disabled selected hidden>Select Skill Category</option>
+                      <option value="Backend & Databases">Backend & Databases</option>
+                      <option value="Frontend & UI/UX">Frontend & UI/UX</option>
+                      <option value="DevOps & Tools">DevOps & Tools</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group" style="margin-bottom: 24px; position: relative;">
+                    <input type="text" id="skill-icon" placeholder=" " required style="width: 100%; padding: 16px; border-radius: 12px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-primary); outline: none;">
+                    <label for="skill-icon">Lucide Icon Name (e.g. coffee, cpu, box, package, database)</label>
+                  </div>
+                  <div class="form-group" style="margin-bottom: 24px; position: relative;">
+                    <select id="skill-icon-color" required style="width: 100%; padding: 16px; border-radius: 12px; border: 1px solid var(--border-glass); background: var(--bg-secondary); color: var(--text-primary); outline: none; font-family: var(--font-body); font-size: 0.95rem;">
+                      <option value="" disabled selected hidden>Select Icon Color</option>
+                      <option value="text-orange">Orange</option>
+                      <option value="text-blue">Blue</option>
+                      <option value="text-yellow">Yellow</option>
+                      <option value="text-cyan">Cyan</option>
+                      <option value="text-purple">Purple</option>
+                      <option value="text-pink">Pink</option>
+                      <option value="text-red">Red</option>
+                      <option value="text-green">Green</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div style="display: flex; gap: 12px;">
+                  <button type="submit" id="skill-submit-btn" class="btn btn-primary">
+                    <span>Add Skill</span> <i data-lucide="plus"></i>
+                  </button>
+                  <button type="button" id="skill-cancel-btn" class="btn btn-secondary" style="display: none;">
+                    Cancel <i data-lucide="x"></i>
+                  </button>
+                </div>
+              </form>
+            </div>
           </section>
         </main>
       </div>

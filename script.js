@@ -473,7 +473,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // ==========================================================================
   // FETCH DYNAMIC PORTFOLIO DATA FROM BACKEND WITH STATIC FALLBACK
   // ==========================================================================
-  const DEFAULT_API_URL = `${window.location.protocol}//${window.location.hostname}:8080`;
+  const DEFAULT_API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? `${window.location.protocol}//${window.location.hostname}:8080`
+    : 'https://jayanth-portfolio-backend.onrender.com';
   const apiUrl = localStorage.getItem('portfolioApiUrl') || DEFAULT_API_URL;
 
   const loadDynamicPortfolioDetails = async () => {

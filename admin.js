@@ -57,6 +57,35 @@ document.addEventListener('DOMContentLoaded', () => {
   // Set API Base Url in config tab
   apiBaseUrlInput.value = apiUrl;
 
+  // Login API settings toggle and save
+  const toggleApiSettingsBtn = document.getElementById('toggle-api-settings');
+  const loginApiContainer = document.getElementById('login-api-container');
+  const loginApiUrlInput = document.getElementById('login-api-url');
+  const saveLoginApiBtn = document.getElementById('save-login-api');
+
+  if (toggleApiSettingsBtn && loginApiContainer) {
+    toggleApiSettingsBtn.addEventListener('click', () => {
+      const isHidden = loginApiContainer.style.display === 'none' || !loginApiContainer.style.display;
+      loginApiContainer.style.display = isHidden ? 'block' : 'none';
+      if (isHidden && loginApiUrlInput) {
+        loginApiUrlInput.value = localStorage.getItem('portfolioApiUrl') || DEFAULT_API_URL;
+      }
+    });
+  }
+
+  if (saveLoginApiBtn && loginApiUrlInput) {
+    saveLoginApiBtn.addEventListener('click', () => {
+      const newUrl = loginApiUrlInput.value.trim().replace(/\/+$/, ""); // Trim and remove trailing slashes
+      if (newUrl) {
+        localStorage.setItem('portfolioApiUrl', newUrl);
+        apiUrl = newUrl;
+        if (apiBaseUrlInput) apiBaseUrlInput.value = newUrl;
+        showToast('API URL updated successfully!');
+        loginApiContainer.style.display = 'none';
+      }
+    });
+  }
+
   // Global State
   let portfolioDetails = null;
 

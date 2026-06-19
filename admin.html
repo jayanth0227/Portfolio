@@ -464,10 +464,24 @@
           <label for="password">Password</label>
         </div>
 
-        <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">
+        <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-bottom: 15px;">
           <span>Login</span> <i data-lucide="log-in"></i>
         </button>
       </form>
+
+      <div style="margin-top: 15px; border-top: 1px solid var(--border-glass); padding-top: 15px; text-align: center;">
+        <button type="button" id="toggle-api-settings" style="background: none; border: none; color: var(--text-muted); font-size: 0.8rem; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; transition: color 0.3s ease;">
+          <i data-lucide="settings" style="width: 14px; height: 14px;"></i> Configure API Server
+        </button>
+        
+        <div id="login-api-container" style="display: none; margin-top: 15px; text-align: left;">
+          <div class="form-group" style="position: relative; margin-bottom: 10px;">
+            <input type="text" id="login-api-url" placeholder=" " style="width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--border-glass); background: var(--bg-secondary); color: var(--text-primary); outline: none; font-size: 0.85rem;">
+            <label for="login-api-url" style="font-size: 0.75rem; transform: translateY(-50%) scale(0.95); top: 0; left: 12px; padding: 0 4px; background: var(--bg-glass);">API Server URL</label>
+          </div>
+          <button type="button" id="save-login-api" class="btn btn-primary" style="padding: 8px 16px; font-size: 0.8rem; width: 100%; min-height: auto; justify-content: center;">Save API URL</button>
+        </div>
+      </div>
     </div>
   </div>
 

@@ -232,29 +232,58 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ==========================================================================
-  // SCROLL REVEAL (INTERSECTION OBSERVER)
+  // SCROLL REVEAL (INTERSECTION OBSERVER & DYNAMIC STAGGER)
   // ==========================================================================
-  const revealElements = document.querySelectorAll('.section-reveal');
+  let revealObserver = null;
 
-  if ('IntersectionObserver' in window) {
-    const revealObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('active');
-          // Once revealed, no need to track it again
-          revealObserver.unobserve(entry.target);
+  const initScrollReveal = () => {
+    // 1. Process staggered reveal containers
+    const staggeredContainers = document.querySelectorAll('.reveal-stagger');
+    staggeredContainers.forEach(container => {
+      const items = container.querySelectorAll('.timeline-item, .project-card, .skill-pill, .stat-card, .info-item');
+      const childrenToAnimate = items.length > 0 ? items : Array.from(container.children);
+      
+      childrenToAnimate.forEach((child, i) => {
+        if (!child.style.transitionDelay) {
+          child.style.transitionDelay = `${Math.min((i + 1) * 0.03, 0.6)}s`;
         }
+        child.classList.add('reveal-up');
       });
-    }, {
-      threshold: 0.05,
-      rootMargin: '0px 0px -50px 0px'
     });
 
-    revealElements.forEach(el => revealObserver.observe(el));
-  } else {
-    // Fallback if IntersectionObserver is not supported
-    revealElements.forEach(el => el.classList.add('active'));
-  }
+    // 2. Observe reveal elements
+    const revealElements = document.querySelectorAll('.section-reveal, .reveal-fade, .reveal-up, .reveal-left, .reveal-right, .reveal-scale');
+
+    if ('IntersectionObserver' in window) {
+      if (!revealObserver) {
+        revealObserver = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('active');
+              // Once revealed, stop tracking
+              revealObserver.unobserve(entry.target);
+            }
+          });
+        }, {
+          threshold: 0.05,
+          rootMargin: '0px 0px -50px 0px'
+        });
+      }
+
+      revealElements.forEach(el => {
+        if (!el.dataset.observed && !el.classList.contains('active')) {
+          el.dataset.observed = 'true';
+          revealObserver.observe(el);
+        }
+      });
+    } else {
+      // Fallback if IntersectionObserver is not supported
+      revealElements.forEach(el => el.classList.add('active'));
+    }
+  };
+
+  // Run initial reveal setup
+  initScrollReveal();
 
   // ==========================================================================
   // PROJECTS CATEGORY FILTER
@@ -543,6 +572,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       timelineContainer.appendChild(itemDiv);
     });
+    initScrollReveal();
   };
 
   const updatePortfolioDOM = (data) => {
@@ -771,6 +801,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
     }
+    initScrollReveal();
   };
 
   const loadDynamicSkills = async () => {
@@ -804,8 +835,18 @@ document.addEventListener('DOMContentLoaded', () => {
       groupedSkills[cat].push(skill);
     });
 
-    // Render grouped categories
-    Object.keys(groupedSkills).forEach(category => {
+    // Predefined professional category order
+    const categoryOrder = [
+      "Languages",
+      "Backend",
+      "Databases",
+      "Frontend",
+      "DevOps & Tools",
+      "Core Concepts",
+      "UI/UX"
+    ];
+
+    const renderCategory = (category) => {
       const categoryDiv = document.createElement('div');
       categoryDiv.className = 'skill-category';
 
@@ -834,6 +875,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
       categoryDiv.appendChild(listDiv);
       skillsGrid.appendChild(categoryDiv);
+    };
+
+    // Render grouped categories in sorted order
+    categoryOrder.forEach(category => {
+      if (groupedSkills[category]) {
+        renderCategory(category);
+      }
+    });
+
+    // Also render any custom categories that are not in the predefined list
+    Object.keys(groupedSkills).forEach(category => {
+      if (!categoryOrder.includes(category)) {
+        renderCategory(category);
+      }
     });
 
     if (typeof lucide !== 'undefined') {
@@ -860,6 +915,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       });
     }
+    initScrollReveal();
   };
 
   // Run dynamic fetch

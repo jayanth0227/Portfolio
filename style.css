@@ -1552,3 +1552,206 @@ a {
     justify-content: center;
   }
 }
+
+/* ==========================================================================
+   RESUME DETAILS (Education, Certifications, Info)
+   ========================================================================== */
+.resume-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
+  margin-top: 60px;
+  width: 100%;
+}
+
+.resume-column {
+  padding: 35px;
+  border-radius: var(--border-radius);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.resume-column:hover {
+  border-color: rgba(99, 102, 241, 0.2);
+  box-shadow: var(--shadow-md);
+}
+
+.resume-column-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 2px solid var(--border-glass);
+  padding-bottom: 12px;
+}
+
+.resume-column-title i {
+  color: var(--primary);
+  width: 24px;
+  height: 24px;
+}
+
+.resume-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-left: 15px;
+  border-left: 2px solid var(--primary-glow);
+}
+
+.resume-card-date {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.resume-card h4 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.resume-card-spec {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.resume-card-inst {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.resume-card-detail {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+/* Certifications list styling */
+.cert-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cert-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.cert-list li i {
+  width: 20px;
+  height: 20px;
+  margin-top: 3px;
+  flex-shrink: 0;
+}
+
+.cert-list li div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cert-list li strong {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.cert-list li span {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+/* Additional Info styling */
+.info-wrapper {
+  margin-top: 40px;
+  padding: 35px;
+  border-radius: var(--border-radius);
+  width: 100%;
+}
+
+.info-wrapper:hover {
+  border-color: rgba(168, 85, 247, 0.2);
+  box-shadow: var(--shadow-md);
+}
+
+.info-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 2px solid var(--border-glass);
+  padding-bottom: 12px;
+  margin-bottom: 24px;
+}
+
+.info-title i {
+  color: var(--secondary);
+  width: 24px;
+  height: 24px;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+.info-item h5 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.info-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.info-pill {
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 6px 14px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-glass);
+  border-radius: 20px;
+  color: var(--text-secondary);
+  transition: all 0.3s ease;
+}
+
+.info-pill:hover {
+  transform: translateY(-2px);
+  border-color: var(--secondary);
+  color: var(--text-primary);
+  box-shadow: 0 4px 10px var(--border-glow);
+}
+
+/* Responsive styles for Resume section */
+@media (max-width: 992px) {
+  .info-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .resume-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}

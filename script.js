@@ -193,7 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // ==========================================================================
   const typingTextEl = document.getElementById('typing-text');
   if (typingTextEl) {
-    const words = ["robust Spring Boot APIs", "scalable Java backends", "optimized database queries", "responsive web interfaces"];
+    const words = ["robust Java Full Stack applications", "scalable SaaS platforms", "secure Spring Boot REST APIs", "workflow automation systems", "optimized database queries"];
     let wordIndex = 0;
     let charIndex = 0;
     let isDeleting = false;

@@ -20,6 +20,10 @@ public class CloudinaryConfig {
 
     @Bean
     public Cloudinary cloudinary() {
+        String cloudinaryUrl = System.getenv("CLOUDINARY_URL");
+        if (cloudinaryUrl != null && !cloudinaryUrl.isEmpty()) {
+            return new Cloudinary(cloudinaryUrl);
+        }
         return new Cloudinary(ObjectUtils.asMap(
                 "cloud_name", cloudName,
                 "api_key", apiKey,

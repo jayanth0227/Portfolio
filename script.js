@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // ==========================================================================
   const cursor = document.getElementById('custom-cursor');
   const cursorGlow = document.getElementById('custom-cursor-glow');
-  
+
   if (cursor && cursorGlow) {
     // Hide custom cursor on devices with touch screens (mobile/tablets)
     if (window.matchMedia('(pointer: coarse)').matches) {
@@ -34,17 +34,17 @@ document.addEventListener('DOMContentLoaded', () => {
       document.addEventListener('mousemove', (e) => {
         mouseX = e.clientX;
         mouseY = e.clientY;
-        
+
         // Main cursor moves instantly
         cursor.style.left = `${mouseX}px`;
         cursor.style.top = `${mouseY}px`;
-        
+
         if (!hasMoved) {
           hasMoved = true;
           cursor.style.opacity = '1';
           cursorGlow.style.opacity = '1';
         }
-        
+
         if (!isMoving) {
           isMoving = true;
           requestAnimationFrame(updateGlow);
@@ -55,13 +55,13 @@ document.addEventListener('DOMContentLoaded', () => {
         // Linear interpolation (lerp) for smooth lag-free delay
         const dx = mouseX - glowX;
         const dy = mouseY - glowY;
-        
+
         glowX += dx * 0.15;
         glowY += dy * 0.15;
-        
+
         cursorGlow.style.left = `${glowX}px`;
         cursorGlow.style.top = `${glowY}px`;
-        
+
         // Stop animation loop when close enough to save CPU resources
         if (Math.abs(dx) < 0.1 && Math.abs(dy) < 0.1) {
           glowX = mouseX;
@@ -113,13 +113,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const savedTheme = localStorage.getItem('theme');
   const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
   const initialTheme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
-  
+
   htmlElement.setAttribute('data-theme', initialTheme);
 
   themeToggle.addEventListener('click', () => {
     const currentTheme = htmlElement.getAttribute('data-theme');
     const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    
+
     htmlElement.setAttribute('data-theme', newTheme);
     localStorage.setItem('theme', newTheme);
   });
@@ -137,7 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
       isScrollTicking = true;
       requestAnimationFrame(() => {
         const scrollPos = window.scrollY;
-        
+
         // Backdrop blur threshold
         if (scrollPos > 50) {
           navbar.classList.add('scrolled');
@@ -161,7 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
             link.classList.add('active');
           }
         });
-        
+
         isScrollTicking = false;
       });
     }
@@ -201,7 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const handleTypewriter = () => {
       const currentWord = words[wordIndex];
-      
+
       if (isDeleting) {
         typingTextEl.textContent = currentWord.substring(0, charIndex - 1);
         charIndex--;
@@ -216,7 +216,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!isDeleting && charIndex === currentWord.length) {
         typingSpeed = 2000; // Pause at end of word
         isDeleting = true;
-      } 
+      }
       // Word finished deleting
       else if (isDeleting && charIndex === 0) {
         isDeleting = false;
@@ -235,7 +235,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // SCROLL REVEAL (INTERSECTION OBSERVER)
   // ==========================================================================
   const revealElements = document.querySelectorAll('.section-reveal');
-  
+
   if ('IntersectionObserver' in window) {
     const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -272,10 +272,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
       projectCards.forEach(card => {
         const category = card.getAttribute('data-category');
-        
+
         // Add subtle scale out animation before hiding
         card.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
-        
+
         if (filterValue === 'all' || category === filterValue) {
           card.classList.remove('hide');
           setTimeout(() => {
@@ -301,7 +301,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (contactForm && statusMsg) {
     const inputs = contactForm.querySelectorAll('input, textarea');
-    
+
     // Real-time input checking
     inputs.forEach(input => {
       input.addEventListener('input', () => {
@@ -335,7 +335,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     contactForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      
+
       let formIsValid = true;
 
       // Validate all fields on submit
@@ -348,7 +348,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (formIsValid) {
         const submitBtn = contactForm.querySelector('.btn-submit');
         const originalBtnText = submitBtn.innerHTML;
-        
+
         // Visual submitting indicator
         submitBtn.disabled = true;
         submitBtn.innerHTML = `<span>Sending...</span> <i data-lucide="loader-2" class="spin"></i>`;
@@ -358,7 +358,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Web3Forms Access Key
         // Paste your Web3Forms access key inside the quotes below. Get it free from https://web3forms.com
-        const WEB3FORMS_KEY = "5a143439-f547-44e0-84a8-b702f46a14fd"; 
+        const WEB3FORMS_KEY = "5a143439-f547-44e0-84a8-b702f46a14fd";
 
         if (WEB3FORMS_KEY === "YOUR_WEB3FORMS_ACCESS_KEY" || !WEB3FORMS_KEY) {
           statusMsg.innerHTML = `
@@ -402,62 +402,62 @@ document.addEventListener('DOMContentLoaded', () => {
           },
           body: JSON.stringify(payload)
         })
-        .then(async (response) => {
-          const resData = await response.json();
-          if (response.ok) {
-            statusMsg.innerHTML = `
+          .then(async (response) => {
+            const resData = await response.json();
+            if (response.ok) {
+              statusMsg.innerHTML = `
               <i data-lucide="check-circle" class="text-green"></i>
               <div class="msg-content">
                 <h5>Message Sent!</h5>
                 <p>Thanks for reaching out. I'll get back to you shortly.</p>
               </div>
             `;
-            statusMsg.classList.add('active');
-            contactForm.reset();
-            
-            // Clear active label invalid flags
-            inputs.forEach(input => {
-              const group = input.closest('.form-group');
-              group.classList.remove('invalid');
-            });
-          } else {
-            statusMsg.innerHTML = `
+              statusMsg.classList.add('active');
+              contactForm.reset();
+
+              // Clear active label invalid flags
+              inputs.forEach(input => {
+                const group = input.closest('.form-group');
+                group.classList.remove('invalid');
+              });
+            } else {
+              statusMsg.innerHTML = `
               <i data-lucide="alert-circle" class="text-red"></i>
               <div class="msg-content">
                 <h5>Failed to Send</h5>
                 <p>${resData.message || 'Something went wrong. Please try again.'}</p>
               </div>
             `;
-            statusMsg.classList.add('active');
-          }
-          if (typeof lucide !== 'undefined') {
-            lucide.createIcons();
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-          statusMsg.innerHTML = `
+              statusMsg.classList.add('active');
+            }
+            if (typeof lucide !== 'undefined') {
+              lucide.createIcons();
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+            statusMsg.innerHTML = `
             <i data-lucide="alert-circle" class="text-red"></i>
             <div class="msg-content">
               <h5>Connection Error</h5>
               <p>Could not connect to the mail server. Please try again later.</p>
             </div>
           `;
-          statusMsg.classList.add('active');
-          if (typeof lucide !== 'undefined') {
-            lucide.createIcons();
-          }
-        })
-        .finally(() => {
-          submitBtn.disabled = false;
-          submitBtn.innerHTML = originalBtnText;
-          if (typeof lucide !== 'undefined') {
-            lucide.createIcons();
-          }
-          setTimeout(() => {
-            statusMsg.classList.remove('active');
-          }, 6000);
-        });
+            statusMsg.classList.add('active');
+            if (typeof lucide !== 'undefined') {
+              lucide.createIcons();
+            }
+          })
+          .finally(() => {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalBtnText;
+            if (typeof lucide !== 'undefined') {
+              lucide.createIcons();
+            }
+            setTimeout(() => {
+              statusMsg.classList.remove('active');
+            }, 6000);
+          });
       }
     });
   }

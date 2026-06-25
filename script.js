@@ -246,7 +246,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
     }, {
-      threshold: 0.15,
+      threshold: 0.05,
       rootMargin: '0px 0px -50px 0px'
     });
 
@@ -476,7 +476,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const DEFAULT_API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
     ? `${window.location.protocol}//${window.location.hostname}:8080`
     : 'https://jayanth-portfolio-backend.onrender.com';
-  const apiUrl = localStorage.getItem('portfolioApiUrl') || DEFAULT_API_URL;
+  const apiUrl = (localStorage.getItem('portfolioApiUrl') || DEFAULT_API_URL).replace(/\/+$/, "");
 
   const loadDynamicPortfolioDetails = async () => {
     try {
@@ -574,22 +574,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Update About Bio (which might have newlines)
     const paragraphs = document.querySelectorAll('.about-content > p');
-    if (paragraphs.length > 0 && data.bio) {
-      const bioParagraphs = data.bio.split('\n\n');
-      const aboutContentDiv = document.querySelector('.about-content');
-      if (aboutContentDiv) {
+    const aboutContentDiv = document.querySelector('.about-content');
+    if (aboutContentDiv && data.bio) {
+      if (paragraphs.length > 0) {
         paragraphs.forEach(p => p.remove());
-        const statsDiv = document.querySelector('.experience-stats');
-        bioParagraphs.forEach(text => {
+      }
+      const statsDiv = document.querySelector('.experience-stats');
+      const bioParagraphs = data.bio.split('\n\n');
+      bioParagraphs.forEach(text => {
+        if (text.trim()) {
           const p = document.createElement('p');
-          p.textContent = text;
+          p.textContent = text.trim();
           if (statsDiv) {
             aboutContentDiv.insertBefore(p, statsDiv);
           } else {
             aboutContentDiv.appendChild(p);
           }
-        });
-      }
+        }
+      });
     }
 
     // Update stats
